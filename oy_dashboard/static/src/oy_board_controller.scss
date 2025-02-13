@@ -1,0 +1,32 @@
+.o_graph_view {
+    .oy-dashboard-action > & .o_graph_canvas_container {
+        min-height: 0 !important;
+    }
+}
+
+.oy-dashboard-action {
+    height: 100%;
+    > .o_view_controller {
+        padding: 0 6px 6px 6px;
+        height: 90%;
+        width: 100%;
+        > .o_content {
+            height: 100%;
+            overflow: auto;
+            > .o_renderer {
+                height: 100%;
+            }
+        }
+    }
+}
+
+.grid-stack {
+    > .grid-stack-item {
+        > .ui-resizable-se, 
+        > .ui-resizable-sw,
+        > .ui-resizable-ne,
+        > .ui-resizable-nw { 
+            background-image: none !important;
+        }
+    }
+}

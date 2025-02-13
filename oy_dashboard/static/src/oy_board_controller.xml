@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="oy_dashboard.OyBoardView">
+        <div class="oy_dashboard h-100 overflow-auto">
+            <t t-if="board.isEmpty">
+                <t t-call="board.NoContent"/>
+            </t>
+            <t t-else="">
+                <t t-call="oy_dashboard.Content"/>
+            </t>
+        </div>
+    </t>
+    <t t-name="oy_dashboard.Content">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary m-1 p-2 d-none" t-on-click="() => this.editBoard()" t-ref="btn-edit">
+                <i class="fa fa-pencil-square-o" aria-hidden="true" width="16" height="16"></i> Edit Layout 
+            </button>
+            <button class="btn btn-danger m-1 p-2 d-none" t-on-click="() => this.cancelBoard()" t-ref="btn-cancel" style="width:100px">
+                <i class="fa fa-ban" aria-hidden="true" width="16" height="16"></i>
+            </button>
+            <button class="btn btn-primary m-1 p-2 d-none" t-on-click="() => this.saveBoard()" t-ref="btn-save" style="width:100px">
+                <i class="fa fa-floppy-o" aria-hidden="true" width="16" height="16"></i>
+            </button>
+        </div>
+        <div class="grid-stack" t-ref="gridstack">
+            <t t-foreach="board.columns" t-as="column" t-key="column_index">
+                <t t-if="column_index lt board.colNumber">
+                    <t t-foreach="column.actions" t-as="action" t-key="action.id">
+                        <div class="grid-stack-item" t-attf-id="gs-item-{{column_index}}-{{action_index}}" t-att-gs-x="action.gsX" t-att-gs-y="action.gsY" t-att-gs-w="action.gsW" t-att-gs-h="action.gsH">
+                            <div class="grid-stack-item-content border rounded overflow-hidden">
+                                <div class="oy-dashboard-action p-1" t-att-data-idx="action_index">
+                                    <div t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} p-2 d-flex align-items-center justify-content-between">
+                                        <h3 class="m-0">
+                                            <span t-esc="action.title"/>
+                                        </h3>
+                                        <span t-if="!env.isSmall" class="btn gs-btn-close float-end p-1 text-muted d-none" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
+                                    </div>
+                                    <BoardAction t-if="!action.isFolded" action="action" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-inherit="board.arch" t-inherit-mode="extension">
+        <xpath expr="//action" position="attributes">
+            <attribute name="t-att-gs-x">action.gsX</attribute>
+            <attribute name="t-att-gs-y">action.gsY</attribute>
+            <attribute name="t-att-gs-w">action.gsW</attribute>
+            <attribute name="t-att-gs-h">action.gsH</attribute>
+        </xpath>
+    </t>
+</templates>
