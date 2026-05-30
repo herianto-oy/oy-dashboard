@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="oy_nested_view.NestedController"
+       t-inherit="web.ListView"
+       t-inherit-mode="primary">
+        <xpath expr="//t[@t-set-slot='layout-buttons']" position="inside">
+            <button type="button"
+                    class="btn btn-secondary"
+                    t-on-click="onFoldAll"
+                    title="Fold">
+                <i class="fa fa-compress me-1"/>Fold
+            </button>
+            <button type="button"
+                    class="btn btn-secondary"
+                    t-on-click="onUnfoldAll"
+                    title="Unfold">
+                <i class="fa fa-expand me-1"/>Unfold
+            </button>
+        </xpath>
+    </t>
+
+</templates>

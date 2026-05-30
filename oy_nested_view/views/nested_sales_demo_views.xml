@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_nested_sales_demo_nested" model="ir.ui.view">
+        <field name="name">oy.nested.sales.demo.nested</field>
+        <field name="model">oy.nested.sales.demo</field>
+        <field name="type">nested</field>
+        <field name="arch" type="xml">
+            <nested parent_field="parent_id" limit="80" options="{'unfold_all': True}" editable="bottom">
+                <field name="name"/>
+                <field name="role" widget="badge"/>
+                <field name="quota" widget="monetary"/>
+                <field name="won" widget="monetary"/>
+                <field name="gap_to_quota" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </nested>
+        </field>
+    </record>
+
+    <record id="view_nested_sales_demo_form" model="ir.ui.view">
+        <field name="name">oy.nested.sales.demo.form</field>
+        <field name="model">oy.nested.sales.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="role"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="quota"/>
+                            <field name="won"/>
+                            <field name="gap_to_quota"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_nested_sales_demo" model="ir.actions.act_window">
+        <field name="name">Sales Hierarchy</field>
+        <field name="res_model">oy.nested.sales.demo</field>
+        <field name="view_mode">nested,list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first sales team member.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_oy_nested_root"
+              name="OY Nested"
+              web_icon="oy_nested_view,static/description/icon.png"
+              sequence="100"/>
+
+    <menuitem id="menu_oy_nested_demo"
+              name="Sales Hierarchy"
+              parent="menu_oy_nested_root"
+              action="action_nested_sales_demo"
+              sequence="10"/>
+
+</odoo>

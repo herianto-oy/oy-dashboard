@@ -1,0 +1,165 @@
+/* All list view styles inherited automatically (NestedRenderer extends
+   ListRenderer with web.ListRenderer template). Only tree-specific styling
+   defined here. */
+
+$tree-line-color: #dee2e6;
+$tree-caret-clearance: 6px;
+
+.o_list_renderer .o_list_table tbody tr.o_data_row {
+    position: relative;
+
+    &.o_nested_dragging {
+        opacity: 0.45;
+        cursor: grabbing;
+    }
+
+    &.o_nested_drop_target {
+        box-shadow: inset 0 0 0 2px var(--bs-primary);
+        background: rgba(13, 110, 253, 0.05);
+    }
+
+    &.o_nested_drop_invalid {
+        box-shadow: inset 0 0 0 2px var(--bs-danger);
+        background: rgba(220, 53, 69, 0.05);
+    }
+}
+
+
+.o_list_renderer .o_list_table tbody tr.o_data_row td.o_nested_td_primary,
+.o_nested_td_primary {
+    position: relative;
+    overflow: visible;
+    z-index: 2;
+    padding-left: calc(var(--nested-indent, 0px) + 32px) !important;
+}
+
+.o_nested_indent_overlay {
+    position: absolute;
+    left: 0;
+    width: var(--nested-indent, 0px);
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 4;
+}
+
+/* Border row default tetap (di TR list view). Untuk row indent (level > 0),
+   mask bagian indent area dengan pseudo-element putih di bottom TD primary
+   yang extend 2px ke luar TD, menutup garis TR border di area indent. */
+.o_list_renderer .o_list_table tbody tr.o_data_row.o_nested_row td.o_nested_td_primary {
+    overflow: visible !important;
+}
+
+.o_list_renderer .o_list_table tbody tr.o_data_row.o_nested_row td.o_nested_td_primary::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: calc(var(--nested-indent, 0px) + 24px);
+    bottom: -2px;
+    height: 4px;
+    background-color: var(--bs-body-bg, #ffffff) !important;
+    z-index: 999 !important;
+    pointer-events: none;
+}
+
+/* Root tanpa child: border full, mask di-skip.
+   Root yang punya child tetap di-mask seperti row anak. */
+.o_list_renderer .o_list_table tbody tr.o_data_row.o_nested_row[data-level="0"].o_nested_row_leaf td.o_nested_td_primary::after {
+    display: none;
+}
+
+.o_list_renderer .o_list_table tbody tr.o_data_row.o_nested_row:nth-of-type(odd) td.o_nested_td_primary::after {
+    background-color: var(--bs-table-striped-bg, #f9f9f9) !important;
+}
+
+.o_list_renderer .o_list_table tbody tr.o_data_row.o_nested_row:hover td.o_nested_td_primary::after {
+    background-color: var(--bs-table-hover-bg, #eeeeee) !important;
+}
+
+.o_nested_seg_vfull,
+.o_nested_seg_corner,
+.o_nested_seg_h,
+.o_nested_seg_descend {
+    position: absolute;
+    border-color: $tree-line-color;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.o_nested_seg_corner {
+    top: -2px;
+    height: calc(50% + 2px);
+    border-left: 1px solid $tree-line-color;
+    border-bottom: 1px solid $tree-line-color;
+    border-bottom-left-radius: 16px;
+}
+
+/* Semua vline diperluas 2px di luar TD (atas/bawah) supaya menyilang mask
+   pseudo dan terlihat continuous antar row. Border shorthand selalu include
+   color biar tidak fallback ke currentColor. */
+.o_nested_seg_vfull {
+    top: -2px;
+    bottom: -2px;
+    width: 0;
+    border-left: 1px solid $tree-line-color;
+}
+
+.o_nested_seg_h {
+    top: 50%;
+    height: 0;
+    border-top: 1px solid $tree-line-color;
+}
+
+.o_nested_seg_descend {
+    top: calc(50% + #{$tree-caret-clearance});
+    bottom: -2px;
+    width: 0;
+    border-left: 1px solid $tree-line-color;
+}
+
+/* Border row asli dari list_renderer.scss tetap (di TR). Indent overlay
+   diperluas 1px di luar TD bottom dan dikasih bg match-row-state agar
+   menimpa garis TR border di area indent. */
+
+
+/* Caret — absolute positioning so it never participates in cell flow */
+button.o_nested_caret.o_nested_caret_abs {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    margin: auto 0 !important;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--bs-secondary-color);
+    cursor: pointer;
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.15s ease-out, color 0.15s ease-out;
+
+    &:hover {
+        color: var(--bs-primary);
+        background: rgba(13, 110, 253, 0.08);
+    }
+
+    .o_nested_caret_icon {
+        display: inline-block;
+        line-height: 1;
+        font-size: 10px;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+    }
+
+    &[aria-expanded="true"] .o_nested_caret_icon,
+    &.o_nested_caret_open .o_nested_caret_icon {
+        transform: rotate(90deg);
+    }
+}
+
+/* Row appear animation (fires every time a row is mounted, including
+   children that just became visible after unfold). */

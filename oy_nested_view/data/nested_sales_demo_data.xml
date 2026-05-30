@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="demo_bessie_cooper" model="oy.nested.sales.demo">
+            <field name="name">Bessie Cooper</field>
+            <field name="role">head</field>
+            <field name="quota">300000</field>
+            <field name="won">260000</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_devon_lane" model="oy.nested.sales.demo">
+            <field name="name">Devon Lane</field>
+            <field name="role">head</field>
+            <field name="quota">150000</field>
+            <field name="won">120000</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_esther_howard" model="oy.nested.sales.demo">
+            <field name="name">Esther Howard</field>
+            <field name="role">head</field>
+            <field name="quota">100000</field>
+            <field name="won">70000</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="demo_dianne_russell" model="oy.nested.sales.demo">
+            <field name="name">Dianne Russell</field>
+            <field name="role">head</field>
+            <field name="quota">300000</field>
+            <field name="won">120000</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="demo_robert_floyd" model="oy.nested.sales.demo">
+            <field name="name">Robert Floyd</field>
+            <field name="role">manager</field>
+            <field name="quota">120000</field>
+            <field name="won">50000</field>
+            <field name="parent_id" ref="demo_bessie_cooper"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_john_doe" model="oy.nested.sales.demo">
+            <field name="name">John Doe</field>
+            <field name="role">manager</field>
+            <field name="quota">100000</field>
+            <field name="won">70000</field>
+            <field name="parent_id" ref="demo_bessie_cooper"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="demo_amie_forward" model="oy.nested.sales.demo">
+            <field name="name">Amie Forward</field>
+            <field name="role">manager</field>
+            <field name="quota">80000</field>
+            <field name="won">65500</field>
+            <field name="parent_id" ref="demo_bessie_cooper"/>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="demo_samantha_white" model="oy.nested.sales.demo">
+            <field name="name">Samantha White</field>
+            <field name="role">sales</field>
+            <field name="quota">60000</field>
+            <field name="won">50000</field>
+            <field name="parent_id" ref="demo_john_doe"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_peter_ghost" model="oy.nested.sales.demo">
+            <field name="name">Peter Ghost</field>
+            <field name="role">sales</field>
+            <field name="quota">40000</field>
+            <field name="won">40000</field>
+            <field name="parent_id" ref="demo_john_doe"/>
+            <field name="sequence">20</field>
+        </record>
+
+    </data>
+</odoo>

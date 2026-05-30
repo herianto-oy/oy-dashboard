@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="oy_nested_view.NestedRenderer"
+       t-inherit="web.ListRenderer"
+       t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="t-on-dragover">(ev) => ev.preventDefault()</attribute>
+            <attribute name="t-on-drop">onDrop</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="oy_nested_view.NestedRenderer.Rows"
+       t-inherit="web.ListRenderer.Rows"
+       t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='list.records']" position="replace">
+            <t t-foreach="visibleEntries" t-as="entry" t-key="entry.record.id">
+                <t t-set="record" t-value="entry.record"/>
+                <t t-set="row" t-value="entry"/>
+                <t t-call="{{ constructor.recordRowTemplate }}"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="oy_nested_view.NestedRenderer.RecordRow"
+       t-inherit="web.ListRenderer.RecordRow"
+       t-inherit-mode="primary">
+
+        <xpath expr="//tr[hasclass('o_data_row')]" position="attributes">
+            <attribute name="t-att-class">getRowClass(record) + ' ' + (row ? nestedRowClasses(row) : '')</attribute>
+            <attribute name="t-att-data-level">row ? row.level : 0</attribute>
+            <attribute name="t-att-style">row ? rowStyle(row) : ''</attribute>
+            <attribute name="t-att-draggable">row and !record.isNew and record.resId ? 'true' : 'false'</attribute>
+            <attribute name="t-on-dragstart">(ev) => row and !record.isNew and record.resId ? this.onDragStart(ev, record, row.level) : null</attribute>
+            <attribute name="t-on-dragover">(ev) => row and !record.isNew and record.resId ? this.onDragOver(ev, record, row.level) : null</attribute>
+            <attribute name="t-on-dragend">onDragEnd</attribute>
+        </xpath>
+
+        <xpath expr="//td[hasclass('o_list_record_selector')]" position="attributes">
+            <attribute name="draggable">false</attribute>
+            <attribute name="t-on-mousedown.stop"/>
+            <attribute name="t-on-dragstart.stop.prevent"/>
+        </xpath>
+
+        <xpath expr="(//td[hasclass('o_data_cell')])[1]" position="attributes">
+            <attribute name="t-att-class">this.getCellClass(column, record) + (column_first and row and !record.isNew and record.resId ? ' o_nested_td_primary' : '')</attribute>
+            <attribute name="t-att-style">column_first and row and !record.isNew and record.resId ? primaryCellStyle(row.level) : ''</attribute>
+        </xpath>
+
+        <xpath expr="(//td[hasclass('o_data_cell')])[1]/t[1]" position="before">
+            <t t-if="column_first and row and !record.isNew and record.resId">
+                <span class="o_nested_seg_descend"
+                      t-if="hasChildrenRec(record) and !isFolded(record)"
+                      t-att-style="descenderStyle(row.level)"/>
+                <div class="o_nested_indent_overlay"
+                     t-if="row.level > 0"
+                     t-att-style="overlayStyle(row.level)">
+                    <t t-foreach="row.ancestorLastFlags" t-as="ancestorLast" t-key="ancestorLast_index">
+                        <t t-if="ancestorLast_index lt (row.level - 1)">
+                            <t t-set="nextLast" t-value="row.ancestorLastFlags[ancestorLast_index + 1]"/>
+                            <span class="o_nested_seg_vfull"
+                                  t-if="!nextLast"
+                                  t-att-style="segLeftStyle(ancestorLast_index)"/>
+                        </t>
+                        <t t-if="ancestorLast_index === (row.level - 1)">
+                            <t t-if="row.isLastSibling">
+                                <span class="o_nested_seg_corner"
+                                      t-att-style="cornerStyle(ancestorLast_index)"/>
+                            </t>
+                            <t t-else="">
+                                <span class="o_nested_seg_vfull"
+                                      t-att-style="segLeftStyle(ancestorLast_index)"/>
+                                <span class="o_nested_seg_h"
+                                      t-att-style="segHStyle(ancestorLast_index)"/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+                <button t-if="hasChildrenRec(record)"
+                        class="o_nested_caret o_nested_caret_abs"
+                        t-att-class="{ 'o_nested_caret_open': !isFolded(record) }"
+                        t-att-style="caretAbsStyle(row.level)"
+                        t-att-aria-expanded="isFolded(record) ? 'false' : 'true'"
+                        t-on-click.stop="() => this.toggleFold(record)">
+                    <span class="o_nested_caret_icon">▶</span>
+                </button>
+            </t>
+        </xpath>
+
+    </t>
+
+</templates>
